@@ -100,7 +100,7 @@ void LoadData(const string& filename)
 
 
 
-class UserSet
+class User_
 {
 
 	
@@ -108,28 +108,28 @@ class UserSet
 private:
 	string** User;
 	string* Friend;
-	string* id;
-	string* LikedPages;
+	string* user_id;
+	string* user_LikedPages;
 	int numOfUser;
 	int numOfField;
 	string CurrentUser;
 
 public:
-UserSet()
+User_()
 {
 	User = nullptr;
 	Friend = nullptr;
-	id = nullptr;
-	LikedPages = nullptr;
+	user_id = nullptr;
+	user_LikedPages = nullptr;
 	numOfUser = 0;
 	numOfField = 0;
 }
 
-~UserSet()
+~User_()
 {
-	delete[]id;
+	delete[]user_id;
 	delete[]Friend;
-	delete[]LikedPages;
+	delete[]user_LikedPages;
 	for (int i = 0; i < numOfUser; i++)
 	{
 		delete[] User[i];
@@ -162,9 +162,9 @@ void LoadData(const string& Text)
 	}
 	file.clear();
 	file.seekg(0, ios::beg);
-	id = new string[numOfUser];
+	user_id = new string[numOfUser];
 	Friend = new string[numOfUser];
-	LikedPages = new string[numOfUser];
+	user_LikedPages = new string[numOfUser];
 	User = new string * [numOfUser];
 	for (int i = 0; i < numOfUser; i++)
 	{
@@ -174,11 +174,11 @@ void LoadData(const string& Text)
 	while (getline(file, line))
 	{
 		stringstream ss(line);
-		string user_id;
-		ss >> user_id;
+		string userid;
+		ss >> userid;
 		if (userIndex < numOfUser)
 		{
-			id[userIndex] = user_id;
+			user_id[userIndex] = userid;
 			for (int i = 0; i < numOfField; i++)
 			{
 				ss >> User[userIndex][i];
@@ -198,7 +198,7 @@ void SetCurrentUser(const string & a)
 	bool found = false;
 	for (int i = 0; i < numOfUser; i++)
 	{
-		if (id[i] == a)
+		if (user_id[i] == a)
 		{
 			CurrentUser = a;
 			found = true;
@@ -214,7 +214,7 @@ void ViewFriendsOfCurrentUser()
 {
 	for (int i = 0; i < numOfUser; i++) 
 	{
-		if (id[i] == CurrentUser) 
+		if (user_id[i] == CurrentUser) 
 		{
 			cout << "Friends of " << User[i][1] << " (" << CurrentUser << "):\n";
 			for (int j = 2; j < numOfField; j++) 
@@ -222,9 +222,9 @@ void ViewFriendsOfCurrentUser()
 				string friend_id = User[i][j];
 				for (int k = 0; k < numOfUser; k++) 
 				{
-					if (id[k] == friend_id)
+					if (user_id[k] == friend_id)
 					{
-						cout << User[k][0] << User[k][1] << " (" << friend_id << ")\n";
+						cout << User[k][0] << User[k][1] <<" "<< friend_id <<endl;
 						break;
 					}
 				}
@@ -232,7 +232,7 @@ void ViewFriendsOfCurrentUser()
 			return;
 		}
 	}
-	cout << "Current user not set. Please set the current user first.\n";
+	cout << "Current user not set. Please set the current user first."<<endl;
 }
 
 void ViewLikedPagesOfCurrentUser(const PageSet& pages)
@@ -240,7 +240,7 @@ void ViewLikedPagesOfCurrentUser(const PageSet& pages)
 	bool currentUserFound = false;
 	for (int i = 0; i < numOfUser; i++) 
 	{
-		if (id[i] == CurrentUser) 
+		if (user_id[i] == CurrentUser) 
 		{
 			currentUserFound = true;
 			cout << User[i][1] << "  Liked Pages:" << endl;
@@ -275,7 +275,7 @@ void ViewLikedPagesOfCurrentUser(const PageSet& pages)
 
 int main()
 {
-	UserSet u1;
+	User_ u1;
 	PageSet p1;
 	u1.LoadData("user.txt");
 	u1.SetCurrentUser("u7");
