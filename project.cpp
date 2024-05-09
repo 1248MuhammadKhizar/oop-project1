@@ -506,7 +506,7 @@ User_ u1;
 
 			else
 			{
-				cout << " No user Occur with ID :" << user << "\n";
+				cout << " No user Occur with ID :" << user <<endl;
 
 			}
 		}
