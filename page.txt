@@ -1,5 +1,5 @@
-p1	Food Fusion
-p2	Al Jazeera English
+p1  Food Fusion
+p2	AlJazeera English
 p3	Allama Iqbal
 p4	Scholarships for International Students
 p5	Rumi Quotes
