@@ -107,7 +107,48 @@ public:
         return current_user;
     }
     bool IsUser(const string& userId) const;
+    void CombinedView(const Post& post, const Page& pages)
+    {
+        string currentUser = GetCurrent();
+        string* creators = post.GetCreator();
 
+        for (int i = 0; i < numOfUser; i++)
+        {
+            if (id[i] == currentUser)
+            {
+                cout << "Content shared by " << Users[i][0] << " " << Users[i][1] << ":\n";
+                for (int j = 2; j < column; j++)
+                {
+                    string friendId = Users[i][j];
+                    for (int k = 0; k < post.GetTotalPost(); k++)
+                    {
+                        if (creators[k] == friendId)
+                        {
+                            if (IsUser(creators[k])) // Check if creator is a user
+                            {
+                                cout << " Creator :" << GetUserName(creators[k]) << "\n";
+                            }
+                            else
+                            {
+                                string pageName = pages.get_page_name(creators[k]);
+                                if (pageName != "Page not found")
+                                {
+                                    cout << " Creator :" << pageName << "\n";
+                                }
+                                else
+                                {
+                                    cout << " Creator :" << creators[k] << "\n";
+                                }
+                            }
+                            cout << "Content: " << post.getreaction(k) << "\t";
+                            cout << post.get_date(k)<<"\n";
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
 };
 
 class Comment
@@ -122,7 +163,7 @@ private:
 public:
     Comment()
     {
-        ifstream file("comments.txt");
+        ifstream file("Comments.txt");
         file >> total_comments;
         users_id = new string[total_comments];
         posts_id = new string[total_comments];
@@ -204,8 +245,8 @@ void User::view_homepage(const Post& p)
     {
         if (creators[i] == current_user)
         {
-            cout << "Post ID: " << p.get_post_id()[i] << endl; 
-            cout << "Content: " << p.getreaction(i) << endl; 
+            cout << "Post ID: " << p.get_post_id()[i] << endl;
+            cout << "Content: " << p.getreaction(i) << endl;
             cout << "Date: " << p.get_date(i) << endl;
         }
     }
@@ -236,7 +277,7 @@ void Post::view_memory(const User& user)
         {
             if (Mid[i] == 1)
             {
-                
+
                 cout << " Feeling " << Memory[i] << endl;
                 cout << reaction[i] << endl;
             }
@@ -711,20 +752,22 @@ void Comment::see_comments(const string& c)
 
 void run_application()
 {
-User u1;
+
+    system("cls");
+    User u1;
     Page p;
     Post p1;
-    Comment c1;    
+    Comment c1;
     p.readdata_from_page("page.txt");
-   
+
     string user;
     cout << "Enter User ID: ";
     cin >> user;
 
     bool found = false;
-    do 
+    do
     {
-        if (u1.IsUser(user)) 
+        if (u1.IsUser(user))
         {
             found = true;
             u1.setUser(user);
@@ -736,57 +779,58 @@ User u1;
         }
     } while (!found);
 
-    cout<<"-------------------------------------------------------------------------------"<<endl;
-    cout<<"PLEASE WAIT WHILE WE SET UP YOUR ACCOUNT AND CHECK YOUR ACCOUNT SECURITY"<<endl;
+    cout << "-------------------------------------------------------------------------------" << endl;
+    cout << "PLEASE WAIT WHILE WE SET UP YOUR ACCOUNT AND CHECK YOUR ACCOUNT SECURITY" << endl;
     Sleep(3000);
-    cout<<"-------------------------------------------------------------------------------"<<endl;
-    cout<<"IMFORMATION VERIFIED_________ Press any key to continue"<<endl;
+    cout << "-------------------------------------------------------------------------------" << endl;
+    cout << "IMFORMATION VERIFIED_________ Press any key to continue" << endl;
     _getch();
 
-    
-    
+
+
 
     int choice;
-    do 
+    do
     {
-        cout    << "Press the following keys to perform "<<endl;
-        cout    << "1. view friends of User\n";
-        cout    << "2. View Liked People of a Post\n";
-        cout    << "3. Like a Post\n";
-        cout    << "4. Set User\n";
-        cout    << "5. View Liked Pages\n";
-        cout    << "6.View Page\n";
-        cout    << "7.See Home Page\n";
-        cout    <<"8. See Memory\n";
-        cout    <<"9. View Comment on Post \n";
-        cout    <<"10. Add Comment \n";
-        cout    << "0. Exit\n";
-        cout    << "Enter your choice: "<<endl;
+        cout << "Press the following keys to perform " << endl;
+        cout << "1. view friends of User\n";
+        cout << "2. View Liked People of a Post\n";
+        cout << "3. Like a Post\n";
+        cout << "4. Set User\n";
+        cout << "5. View Liked Pages\n";
+        cout << "6.View Page\n";
+        cout << "7.See Home Page\n";
+        cout << "8. See Memory\n";
+        cout << "9. View Comment on Post \n";
+        cout << "10. Add Comment \n";
+        cout <<" 11.view combined view\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: " << endl;
         cin >> choice;
-        if(choice==1) {
-        
+        if (choice == 1) {
+
             u1.view_friends_Of_User();
         }
-        else if(choice==2) {
+        else if (choice == 2) {
             string postId;
             cout << "Enter Post ID: ";
             cin >> postId;
             p1.view_liked_people(postId, u1, p);
-    
+
         }
-        
-        else if(choice==3) {
+
+        else if (choice == 3) {
             string postId;
             cout << "Enter Post ID: ";
             cin >> postId;
             p1.like_a_Post(u1, postId);
-            
+
         }
 
-        else if(choice==4) {
+        else if (choice == 4) {
             cout << "Enter User ID: ";
             cin >> user;
-            if (u1.IsUser(user)) 
+            if (u1.IsUser(user))
             {
                 u1.setUser(user);
             }
@@ -794,66 +838,69 @@ User u1;
             {
                 cout << "User not found.\n";
             }
-        
+
         }
-        else if(choice==5) 
+        else if (choice == 5)
         {
             u1.view_liked_pages_of_user(p);
-        
+
         }
-        else if(choice==6)
+        else if (choice == 6)
         {
             string Page;
-            cout<<"Enter Page : ";
+            cout << "Enter Page : ";
             cin >> Page;
             p.viewpage(Page, p1);
 
         }
-        
-        else if(choice==7)
+
+        else if (choice == 7)
         {
             u1.view_homepage(p1);
-        
+
         }
-       else if(choice==8)
+        else if (choice == 8)
         {
             p1.view_memory(u1);
-        
+
         }
-       else if(choice==9)
+        else if (choice == 9)
         {
             string post;
             cout << " Enter Post ID :";
             cin >> post;
-             
+
             c1.see_comments(post);
-        
+
         }
 
-       else if(choice==10) 
+        else if (choice == 10)
         {
             string post;
             cout << " Enter Post : ";
             cin >> post;
-            cin.ignore(); 
+            cin.ignore();
             string Comm;
             cout << " Enter Comment :";
             getline(cin, Comm);
             c1.add_comments(u1.GetCurrent(), post, Comm);
-        
-        }
 
-        else if(choice==0)
+        }
+        else if (choice == 11)
+        {
+            u1.CombinedView(p1, p);
+        }
+        else if (choice == 0)
         {
             break;
         }
-        
-        else{
+
+        else {
             cout << "Invalid option! Please try again.\n";
         }
 
 
-        cout<<" Press any key to further run the program "<<endl;
+        cout << " Press any key to further run the program " << endl;
         _getch();
         Sleep(1000);
     } while (choice != 0);
